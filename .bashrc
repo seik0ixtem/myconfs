@@ -37,13 +37,19 @@ PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 # fancy for regular user
 #PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
 
+#proxy
+
+export MANWIDTH=80
+
 #userful title rename for tmux terminal-manager
 ssh() {
 	SSH_IP=`echo $1 | cut -d@ -f 2`
-    tmux rename-window "$SSH_IP"
+	# not exactly correct, but works in most cases
+	if [ "$2" = "-p" ]; then
+		SSH_PORT=":$3"
+	fi
+	tmux rename-window "$SSH_IP$SSH_PORT"
     command ssh "$@"
-    echo "Counting to 60"
-    sleep 60 && exit
-    tmux rename-window "bash (exited ssh)"
+	tmux rename-window "`tmux display-message -p '#W'`#"
 }
 
