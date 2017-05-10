@@ -48,8 +48,22 @@ ssh() {
 	if [ "$2" = "-p" ]; then
 		SSH_PORT=":$3"
 	fi
-	tmux rename-window "$SSH_IP$SSH_PORT"
-    command ssh "$@"
-	tmux rename-window "`tmux display-message -p '#W'`#"
+
+	# do not rename handwritten names (starting with #)
+	# buggy after disconnect, but be so
+	cur_name=`tmux display-message -p '#W' | sed 's/#\+$//'`
+	if ! echo $cur_name | grep -q -E '^#'; then
+		tmux rename-window "$SSH_IP$SSH_PORT"
+	fi
+
+	command ssh "$@"
+	
+	old_name=`tmux display-message -p '#W' | sed 's/#\+$//'`
+
+	# do not rename if already marked disconnected
+	if ! echo $old_name | grep -q -E '#$'; then
+		tmux rename-window "$old_name#"
+	fi
+	tmux rename-window "$old_name#"
 }
 
