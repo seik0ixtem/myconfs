@@ -37,8 +37,6 @@ PS1='\[\e[1;32m\][\u@\h \W]\$\[\e[0m\] '
 # fancy for regular user
 #PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
 
-#proxy
-
 export MANWIDTH=80
 
 #userful title rename for tmux terminal-manager
@@ -64,6 +62,6 @@ ssh() {
 	if ! echo $old_name | grep -q -E '#$'; then
 		tmux rename-window "$old_name#"
 	fi
-	tmux rename-window "$old_name#"
+	#tmux rename-window "$old_name#"
 }
 
